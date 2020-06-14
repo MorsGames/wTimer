@@ -1,6 +1,6 @@
 # WalrusTimer
 
-**WalrusTimer** is a replacement for GameMaker's built-in alarms. Instead of relying on seperate actions, with this script you can just use your own methods, meaning you can declare timers and what they do in a single script, or even a signle line if you so choose!
+**WalrusTimer** is a replacement for GameMaker's built-in alarms. Instead of relying on separate actions, with this script you can just use your own methods, meaning you can declare timers and what they do in a single script, or even a single line if you so choose!
 
 It comes with 6 methods.
 - timer_set
