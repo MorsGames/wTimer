@@ -1,3 +1,3 @@
 /// @desc Update the timer
 
-timer_system_update()
+timer_system_update();

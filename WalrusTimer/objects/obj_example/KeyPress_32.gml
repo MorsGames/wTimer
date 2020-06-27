@@ -1,3 +1,3 @@
-/// @desc Destroy the timer
+/// @desc Pause or unpause the timer
 
-timer_destroy(timer)
+timer_set_pause(timer, !timer_get_pause(timer));
