@@ -26,8 +26,8 @@ The entirety of this project is licensed under **MPL 2.0**. Please give me credi
 ---
 
 ## Changelog
-v1.1.0:
-- Added "timer_set_pause" and "timer_get_pause"
+v1.1.0 (27/06/2020):
+- Added "timer_set_pause" and "timer_get_pause" methods.
 - Added the "repeat" argument to "timer_set". You can now use the timers the same way you'd use Javascript's "setInterval()".
 - Added support for custom tick rates, allowing the use of timers with projects that utilize delta time.
 - Removed "timer_system_init".
@@ -35,5 +35,8 @@ v1.1.0:
 - Made the example look fancier.
 - Rewrote the description.
 - Changed the license to MPL 2.0.
+
+v1.0.0 (15/06/2020):
+- Initial release.
 
 If you have any questions, you can ask them on this project's [itch.io page](https://mors-games.itch.io/WalrusTimer) or at my [Discord Server](https://discord.gg/4jgSARF).
