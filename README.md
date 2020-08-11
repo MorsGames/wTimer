@@ -8,8 +8,23 @@ With this library you can create timers that run a custom method you give it aft
 
 The usage of this library is very similar to Javascript's "setInterval()" and "setTimeout()" methods, so if you're familiar with Javascript this will also feel very familiar.
 
----
 
+## Basic Usage
+
+```gml
+callback1 = function() {
+	show_message("Pretty cool, huh?");
+}
+callback2 = function() {
+	show_message("This timer will repeat forever at the same interval.");
+}
+timer_set(callback1, 300);
+timer_set(callback2, 60, true);
+timer_set(function(){show_message("You can do inline functions too.");}, 200);
+```
+
+
+## Details
 This library comes with 6 methods.
 - timer_set(callback, frames, repeat[OPTIONAL], persistent[OPTIONAL], argument[OPTIONAL])
 - timer_destroy(timer)
@@ -23,7 +38,6 @@ This library is only tested on Windows, and currently has some issues with HTML5
 
 The entirety of this project is licensed under **MPL 2.0**. Please give me credit if you end up using this library, otherwise I will be very sad.
 
----
 
 ## Changelog
 v1.1.0 (27/06/2020):
