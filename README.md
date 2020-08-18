@@ -34,7 +34,7 @@ This library comes with 6 methods.
 - timer_system_update(tick_rate[OPTIONAL])
 - timer_system_room_end()
 
-This library is only tested on Windows, and currently has some issues with HTML5. If you have any idea what could be the cause of those issues please let me know. It also comes with an example project that will teach you the basics.
+This library is only tested on Windows and HTML5. It should also work on other platforms, but if it doesn't please let me know. It also comes with an example project that will teach you the basics.
 
 The entirety of this project is licensed under **MPL 2.0**. Please give me credit if you end up using this library, otherwise I will be very sad.
 
