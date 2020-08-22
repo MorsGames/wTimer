@@ -1,10 +1,10 @@
 # WalrusTimer v1.1.0
 
-**WalrusTimer** is a replacement library for **GameMaker Studio 2.3**'s built-in alarms.
+**WalrusTimer** is a replacement library for **GameMaker Studio 2.3+**'s built-in alarms.
 
 [Download from itch.io!](https://mors-games.itch.io/WalrusTimer)
 
-With this library you can create timers that run a custom method you give it after a certain number of frames. This is very similar to GameMaker's built-in alarms, but instead of relying on separate actions, with this library you can just use your own methods, meaning you can declare timers and what they do in a single script, or even a single line if you so choose!
+With this library, you can create timers that run a custom method you give it after a certain number of frames. This is very similar to GameMaker's built-in alarms, but instead of relying on separate actions, with this library, you can just use your own methods, meaning you can declare timers and what they do in a single script, or even a single line if you so choose!
 
 The usage of this library is very similar to Javascript's "setInterval()" and "setTimeout()" methods, so if you're familiar with Javascript this will also feel very familiar.
 
@@ -34,10 +34,9 @@ This library comes with 6 methods.
 - timer_system_update(tick_rate[OPTIONAL])
 - timer_system_room_end()
 
-This library is only tested on Windows and HTML5. It should also work on other platforms, but if it doesn't please let me know. It also comes with an example project that will teach you the basics.
+This library is only tested on Windows and HTML5 platforms, but it should also work on other platforms as well. It also comes with an example project that will teach you the basics.
 
-The entirety of this project is licensed under **MPL 2.0**. Please give me credit if you end up using this library, otherwise I will be very sad.
-
+The entirety of this project is licensed under **MPL 2.0**, so please give me credit if you end up using it.
 
 ## Changelog
 v1.1.0 (27/06/2020):
