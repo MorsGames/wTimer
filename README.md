@@ -2,7 +2,7 @@
 
 **WalrusTimer** is a replacement library for **GameMaker Studio 2.3+**'s built-in alarms.
 
-[Download from itch.io!](https://mors-games.itch.io/WalrusTimer)
+[itch.io](https://mors-games.itch.io/WalrusTimer) | [YoYo Marketplace](https://marketplace.yoyogames.com/assets/9388/walrustimer) | [Discord Server](https://discord.gg/4jgSARF)
 
 With this library, you can create timers that run a custom method you give it after a certain number of frames. This is very similar to GameMaker's built-in alarms, but instead of relying on separate actions, with this library, you can just use your own methods, meaning you can declare timers and what they do in a single script, or even a single line if you so choose!
 
