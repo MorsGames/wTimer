@@ -26,7 +26,7 @@ timer_set(function(){show_message("You can do inline functions too.");}, 200);
 
 ## Details
 This library comes with 6 methods.
-- timer_set(callback, frames, repeat[OPTIONAL], persistent[OPTIONAL], argument[OPTIONAL])
+- timer_set(callback, frames, repeat[OPTIONAL], arguments...[OPTIONAL])
 - timer_destroy(timer)
 - timer_get(timer)
 - timer_set_pause(timer, pause)
@@ -39,6 +39,13 @@ This library is only tested on Windows and HTML5 platforms, but it should also w
 The entirety of this project is licensed under **MPL 2.0**, so please give me credit if you end up using it.
 
 ## Changelog
+v1.2.0 (28/08/2020):
+- Added support for up to 16 arguments instead of 1.
+- The functions will now run in the instance the timer was created in.
+- If the instance cannot be found by the time the timer ends, the timer will get destroyed without running any code.
+- You don't have to manually declare timers as persistent anymore, it now depends on the instance running the timer.
+- Slightly updated the example
+
 v1.1.0 (27/06/2020):
 - Added "timer_set_pause" and "timer_get_pause" methods.
 - Added the "repeat" argument to "timer_set". You can now use the timers the same way you'd use Javascript's "setInterval()".

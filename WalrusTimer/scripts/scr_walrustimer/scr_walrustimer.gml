@@ -2,7 +2,7 @@
 // http://www.mors-games.com/
 // Licensed under MPL 2.0. Please give credit if used, otherwise I will be very sad.
 
-#macro __WALRUSTIMER_VERSION "1.1.0"
+#macro __WALRUSTIMER_VERSION "1.2.0"
 
 show_debug_message("WalrusTimer v" + __WALRUSTIMER_VERSION + " by Mors");
 
@@ -13,27 +13,27 @@ global.__timer_index = 0;
 /// @argument {function} callback The callback to invoke.
 /// @argument {number} frames How long the wait will be for the timer to execute the callback function.
 /// @argument {bool} repeat[OPTIONAL] If the timer will repeat after being completed or will be destroyed. False by default.
-/// @argument {bool} persistent[OPTIONAL] If the timer will be destroyed between rooms or not. False by default.
-/// @argument {anything} argument[OPTIONAL] The argument that can be used with the function. Optional.
+/// @argument {anything} arguments...[OPTIONAL] Arguments that can be used with the function. You can have a maximum of 16. Optional.
 /// @returns {number} The ID corresponding to the timer. Optional.
 function timer_set(_callback, _frames) {
-	var _argument = noone;
-	var _persistent = false;
 	var _repeat = false;
+	var _arguments = noone;
 	if (argument_count > 2)
 	    _repeat = argument[2];
-	if (argument_count > 3)
-		_persistent = argument[3];
-	if (argument_count > 4)
-		_argument = argument[4];
+	if (argument_count > 3) {
+		for (var i = 3; i < argument_count; i++) {
+			_arguments[i-3] = argument[i]
+		}
+	}
+		
 	ds_list_add(global.__timer_list, {
 		in: global.__timer_index,
+		ci: id,
 		cb: _callback,
 		iv: _frames,
 		fv: _frames,
 		rp: _repeat,
-		pr: _persistent,
-		ar: _argument,
+		ar: _arguments,
 		ps: 0
 	});
 	
@@ -110,11 +110,34 @@ function timer_system_update() {
 	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
 		var _result = global.__timer_list[| i];
 		if (_result.fv <= 0) {
-			if (_result.ar != noone)
-				_result.cb(_result.ar);
-			else
-				_result.cb();
-			if (_result.rp) {
+			if (instance_exists(_result.ci)) {
+				var _a = _result.ar;
+				var _c = _result.cb;
+				var _len = is_array(_a) ? array_length(_a) : -1;
+				with (_result.ci) {
+					// I had no other way of achieving this...
+					switch (_len) {
+					    case 1:  _c(_a[0]); break;
+					    case 2:  _c(_a[0], _a[1]); break;
+					    case 3:  _c(_a[0], _a[1], _a[2]); break;
+					    case 4:  _c(_a[0], _a[1], _a[2], _a[3]); break;
+					    case 5:  _c(_a[0], _a[1], _a[2], _a[3], _a[4]); break;
+					    case 6:  _c(_a[0], _a[1], _a[2], _a[3], _a[4], _a[5]); break;
+					    case 7:  _c(_a[0], _a[1], _a[2], _a[3], _a[4], _a[5], _a[6]); break;
+					    case 8:  _c(_a[0], _a[1], _a[2], _a[3], _a[4], _a[5], _a[6], _a[7]); break;
+					    case 9:  _c(_a[0], _a[1], _a[2], _a[3], _a[4], _a[5], _a[6], _a[7], _a[8]); break;
+					    case 10: _c(_a[0], _a[1], _a[2], _a[3], _a[4], _a[5], _a[6], _a[7], _a[8], _a[9]); break;
+					    case 11: _c(_a[0], _a[1], _a[2], _a[3], _a[4], _a[5], _a[6], _a[7], _a[8], _a[9], _a[10]); break;
+					    case 12: _c(_a[0], _a[1], _a[2], _a[3], _a[4], _a[5], _a[6], _a[7], _a[8], _a[9], _a[10], _a[11]); break;
+					    case 13: _c(_a[0], _a[1], _a[2], _a[3], _a[4], _a[5], _a[6], _a[7], _a[8], _a[9], _a[10], _a[11], _a[12]); break;
+					    case 14: _c(_a[0], _a[1], _a[2], _a[3], _a[4], _a[5], _a[6], _a[7], _a[8], _a[9], _a[10], _a[11], _a[12], _a[13]); break;
+					    case 15: _c(_a[0], _a[1], _a[2], _a[3], _a[4], _a[5], _a[6], _a[7], _a[8], _a[9], _a[10], _a[11], _a[12], _a[13], _a[14]); break;
+					    case 16: _c(_a[0], _a[1], _a[2], _a[3], _a[4], _a[5], _a[6], _a[7], _a[8], _a[9], _a[10], _a[11], _a[12], _a[13], _a[14], _a[15]); break;
+					    default: _c(); break;
+					}
+				}
+			}
+			if (instance_exists(_result.ci) && _result.rp) {
 				_result.fv = _result.iv;
 			}
 			else {
@@ -135,7 +158,7 @@ function timer_system_room_end() {
 	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
 		var _result = global.__timer_list[| i];
 		if (_result.fv <= 0) {
-			if (!_result.pr)
+			if (!_result.ci.persistent)
 				delete _result;
 				ds_list_delete(global.__timer_list, i);	
 			i--;
