@@ -1,4 +1,4 @@
-# WalrusTimer v1.1.0
+# WalrusTimer v1.3.0
 
 **WalrusTimer** is a replacement library for **GameMaker Studio 2.3+**'s built-in alarms.
 
@@ -26,12 +26,14 @@ timer_set(function(){show_message("You can do inline functions too.");}, 200);
 
 ## Details
 This library comes with 6 methods.
-- timer_set(callback, frames, repeat[OPTIONAL], arguments...[OPTIONAL])
+- timer_set(callback, value, repeat[OPTIONAL], arguments...[OPTIONAL])
 - timer_destroy(timer)
 - timer_get(timer)
-- timer_set_pause(timer, pause)
+- timer_change(timer, value, change_repeat_time[OPTIONAL])
+- timer_pause(timer, pause[OPTIONAL])
 - timer_get_pause(timer)
-- timer_system_update(tick_rate[OPTIONAL])
+- timer_system_set_tickrate(tick_rate)
+- timer_system_update(tick_rate)
 - timer_system_room_end()
 
 This library is only tested on Windows and HTML5 platforms, but it should also work on other platforms as well. It also comes with an example project that will teach you the basics.
@@ -39,12 +41,19 @@ This library is only tested on Windows and HTML5 platforms, but it should also w
 The entirety of this project is licensed under **MPL 2.0**, so please give me credit if you end up using it.
 
 ## Changelog
+v1.3.0 (01/09/2020):
+- Renamed "timer_set_pause" to "timer_pause".
+- Added "timer_change".
+- Added "timer_system_set_tickrate".
+- Made it so if you set the tick rate to -1 the timer system runs independently from the frame rate, using milliseconds instead of frames. 
+- Fixed a crash that happened if a room ended with a persistent timer while the instance didn't exist.
+
 v1.2.0 (28/08/2020):
 - Added support for up to 16 arguments instead of 1.
 - The functions will now run in the instance the timer was created in.
 - If the instance cannot be found by the time the timer ends, the timer will get destroyed without running any code.
 - You don't have to manually declare timers as persistent anymore, it now depends on the instance running the timer.
-- Slightly updated the example
+- Slightly updated the example.
 
 v1.1.0 (27/06/2020):
 - Added "timer_set_pause" and "timer_get_pause" methods.
