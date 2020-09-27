@@ -41,7 +41,7 @@ This library is only tested on Windows and HTML5 platforms, but it should also w
 The entirety of this project is licensed under **MPL 2.0**, so please give me credit if you end up using it.
 
 ## Changelog
-v1.3.0 (01/09/2020):
+v1.3.0 (28/09/2020):
 - Renamed "timer_set_pause" to "timer_pause".
 - Added "timer_change".
 - Added "timer_system_set_tickrate".
