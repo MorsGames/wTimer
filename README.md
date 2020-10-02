@@ -25,16 +25,17 @@ timer_set(function(){show_message("You can do inline functions too.");}, 200);
 
 
 ## Details
-This library comes with 6 methods.
+This library comes with 10 methods.
 - timer_set(callback, value, repeat[OPTIONAL], arguments...[OPTIONAL])
 - timer_destroy(timer)
 - timer_get(timer)
 - timer_change(timer, value, change_repeat_time[OPTIONAL])
 - timer_pause(timer, pause[OPTIONAL])
-- timer_get_pause(timer)
-- timer_system_set_tickrate(tick_rate)
+- timer_get_paused(timer)
 - timer_system_update(tick_rate)
 - timer_system_room_end()
+- timer_system_set_tickrate(tick_rate)
+- timer_system_get_tickrate()
 
 This library is only tested on Windows and HTML5 platforms, but it should also work on other platforms as well. It also comes with an example project that will teach you the basics.
 
@@ -43,6 +44,7 @@ The entirety of this project is licensed under **MPL 2.0**, so please give me cr
 ## Changelog
 v1.3.1 (02/10/2020):
 - Fixed a minor issue that would result with the library not working at all.
+- Added "timer_system_get_tickrate".
 - Renamed "timer_get_pause" to "timer_get_paused".
 - Minor optimizations.
 - Minor reformatting.
