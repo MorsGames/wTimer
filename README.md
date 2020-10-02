@@ -1,4 +1,4 @@
-# WalrusTimer v1.3.0
+# WalrusTimer v1.3.1
 
 **WalrusTimer** is a replacement library for **GameMaker Studio 2.3+**'s built-in alarms.
 
@@ -41,6 +41,12 @@ This library is only tested on Windows and HTML5 platforms, but it should also w
 The entirety of this project is licensed under **MPL 2.0**, so please give me credit if you end up using it.
 
 ## Changelog
+v1.3.1 (02/10/2020):
+- Fixed a minor issue that would result with the library not working at all.
+- Renamed "timer_get_pause" to "timer_get_paused".
+- Minor optimizations.
+- Minor reformatting.
+
 v1.3.0 (28/09/2020):
 - Renamed "timer_set_pause" to "timer_pause".
 - Added "timer_change".

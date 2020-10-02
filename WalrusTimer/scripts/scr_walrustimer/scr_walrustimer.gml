@@ -2,13 +2,13 @@
 // http://www.mors-games.com/
 // Licensed under MPL 2.0. Please give credit if used, otherwise I will be very sad.
 
-#macro __WALRUSTIMER_VERSION "1.3.0"
+#macro __WALRUSTIMER_VERSION "1.3.1"
 
 show_debug_message("WalrusTimer v" + __WALRUSTIMER_VERSION + " by Mors");
 
 global.__timer_list = ds_list_create();
 global.__timer_index = 0;
-global._global.__tick_rate = 1;
+global.__tick_rate = 1;
 
 /// @func timer_set(callback, value, repeat[OPTIONAL], persistent[OPTIONAL], argument[OPTIONAL])
 /// @argument {function} callback The callback to invoke.
@@ -16,7 +16,7 @@ global._global.__tick_rate = 1;
 /// @argument {bool} repeat[OPTIONAL] If the timer will repeat after being completed or will be destroyed. False by default.
 /// @argument {anything} arguments...[OPTIONAL] Arguments that can be used with the function. You can have a maximum of 16. Optional.
 /// @returns {number} The ID corresponding to the timer.
-function timer_set(_callback, _value) {
+function timer_set(callback, value) {
 	var _repeat = false;
 	var _arguments = noone;
 	if (argument_count > 2)
@@ -30,9 +30,9 @@ function timer_set(_callback, _value) {
 	ds_list_add(global.__timer_list, {
 		in: global.__timer_index,
 		ci: id,
-		cb: _callback,
-		iv: _value,
-		fv: _value,
+		cb: callback,
+		iv: value,
+		fv: value,
 		rp: _repeat,
 		ar: _arguments,
 		ct: current_time,
@@ -47,10 +47,10 @@ function timer_set(_callback, _value) {
 /// @desc Stops and destroys a timer. Does not need to be called manually after a timer's time runs out.
 /// @argument {number} timer The index of the timer to destroy.
 /// @returns {bool} Whether if the timer was successfully removed or not.
-function timer_destroy(_timer) {
+function timer_destroy(timer) {
 	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
 		var _result = global.__timer_list[| i];
-		if (_result.in == _timer) {
+		if (_result.in == timer) {
             delete _result;
 			ds_list_delete(global.__timer_list, i);	
 			return true;
@@ -63,10 +63,10 @@ function timer_destroy(_timer) {
 /// @desc Returns how much time the timer has left, in frames. Returns -1 if the timer doesn't exist.
 /// @argument {number} timer The index of the timer to destroy.
 /// @returns {number} How much time the timer has left, in frames.
-function timer_get(_timer) {
+function timer_get(timer) {
 	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
 		var _result = global.__timer_list[| i];
-		if (_result.in == _timer) {
+		if (_result.in == timer) {
             return _result.fv;
 		}
 	}
@@ -78,10 +78,10 @@ function timer_get(_timer) {
 /// @argument {number} timer The index of the timer to pause.
 /// @argument {bool} pause[OPTIONAL] If the timer should be paused or resumed. When not used, the timer just gets toggled.
 /// @returns {bool} Whether if the timer was successfully paused or not.
-function timer_pause(_timer) {
+function timer_pause(timer) {
 	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
 		var _result = global.__timer_list[| i]
-		if (_result.in == _timer) {
+		if (_result.in == timer) {
 			if (argument_count > 1) {
 				_result.ps = argument[1];
 			}
@@ -100,50 +100,43 @@ function timer_pause(_timer) {
 	return false;
 }
 
-/// @func timer_change(timer, value, change_repeat_time[OPTIONAL])
-/// @desc Changes the current remaining time of the timer, or the milliseconds it takes for timer to complete if the system is running at frame rate independent mode.
-/// @argument {number} timer The index of the timer to pause.
-/// @argument {number} value The new remaining time for the timer, either in frames or milliseconds depending on if the system is running at frame rate independent mode or not.
-/// @argument {number} change_repeat_time[OPTIONAL] When true, only the time used for the future repeats of the timer is changed.
-/// @returns {bool} Whether if the timer's remaining time was successfully changed or not.
-function timer_change(_timer, _value) {
-	var _change_repeat_time = false;
-	if (argument_count > 2)
-	    _change_repeat_time = argument[2];
-	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
-		var _result = global.__timer_list[| i]
-		if (_result.in == _timer) {
-			if (_change_repeat_time) {
-				_result.iv = _value;
-			}
-			else {
-				_result.fv = _value;
-			}
-			return true;
-		}
-	}
-	return false;
-}
-
-/// @func timer_get_pause(timer)
+/// @func timer_get_paused(timer)
 /// @desc Gets whether if a timer is paused or not.
 /// @argument {number} timer The index of the timer.
 /// @returns {bool} Whether if the timer is paused or not. Returns -1 if the timer doesn't exist.
-function timer_get_pause(_timer) {
+function timer_get_paused(timer) {
 	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
 		var _result = global.__timer_list[| i]
-		if (_result.in == _timer) {
+		if (_result.in == timer) {
             return _result.ps;
 		}
 	}
 	return -1;
 }
 
-/// @func timer_system_set_tickrate(tick_rate)
-/// @desc Changes the tick rate of the timer system. If you set it to -1 the timer will run independently from the frame rate, and you will need to use milliseconds instead of frames for the timer durations. 
-/// @argument {number} tick_rate The global tick rate for the timers.
-function timer_system_set_tickrate(_tick_rate) {
-	global.__tick_rate = _tick_rate;
+/// @func timer_change(timer, value, change_repeat_time[OPTIONAL])
+/// @desc Changes the current remaining time of the timer, or the milliseconds it takes for timer to complete if the system is running at frame rate independent mode.
+/// @argument {number} timer The index of the timer to pause.
+/// @argument {number} value The new remaining time for the timer, either in frames or milliseconds depending on if the system is running at frame rate independent mode or not.
+/// @argument {number} change_repeat_time[OPTIONAL] When true, only the time used for the future repeats of the timer is changed.
+/// @returns {bool} Whether if the timer's remaining time was successfully changed or not.
+function timer_change(timer, value) {
+	var _change_repeat_time = false;
+	if (argument_count > 2)
+	    _change_repeat_time = argument[2];
+	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
+		var _result = global.__timer_list[| i]
+		if (_result.in == timer) {
+			if (_change_repeat_time) {
+				_result.iv = value;
+			}
+			else {
+				_result.fv = value;
+			}
+			return true;
+		}
+	}
+	return false;
 }
 
 /// @func timer_system_update()
@@ -210,4 +203,20 @@ function timer_system_room_end() {
 			_result.fv--;
 		}
 	}
+}
+
+/// @func timer_system_set_tickrate(tick_rate)
+/// @desc Sets the tick rate of the timer system. If you set it to -1 the timer will run independently from the frame rate, and you will need to use milliseconds instead of frames for the timer durations. 
+/// @argument {number} tick_rate The global tick rate for the timers.
+function timer_system_set_tickrate(tick_rate) {
+	gml_pragma("forceinline");
+	global.__tick_rate = tick_rate;
+}
+
+/// @func timer_system_get_tickrate()
+/// @desc Gets the tick rate of the timer system.
+/// @returns {number} The global tick rate for the timers.
+function timer_system_get_tickrate() {
+	gml_pragma("forceinline");
+	return global.__tick_rate;
 }
