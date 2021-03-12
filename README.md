@@ -1,6 +1,6 @@
 # WalrusTimer v2.0.0
 
-**WalrusTimer** is a replacement library for **GameMaker Studio 2.3+**'s built-in alarms.
+**WalrusTimer** is a replacement library for **GameMaker Studio 2.3**'s built-in alarms.
 
 [API Reference](https://github.com/MorsGames/WalrusTimer/wiki) | [itch.io](https://mors-games.itch.io/WalrusTimer) | [YoYo Marketplace](https://marketplace.yoyogames.com/assets/9388/walrustimer)
 
@@ -10,7 +10,7 @@ The usage of this library is very similar to Javascript's "setInterval()" and "s
 
 This library is only tested on the Windows and HTML5 targets, but it should work on other platforms as well. It also comes with an example project that will teach you the basics.
 
-Since I made this library primarily for my own personal projects, I will keep updating it on a regular basis, at least for the time being.
+Since I made this library primarily for my own personal projects, I will keep updating it on a regular basis.
 
 
 ## Basic Usage
@@ -33,7 +33,7 @@ This library is licensed under **MPL 2.0**. You can learn more about it [here](h
 
 ## Changelog
 v2.0.0 (12/03/2021):
-- Split "timer_set" into "timer" and "timer_ms", so it's now possible to use both real-time and frame based timers together.
+- Split "timer_set" into "timer" and "timer_ms", so it's now possible to use both real-time and frame-based timers together.
 - Added "timer_trigger".
 - Added "timer_get_time".
 - Added "timer_get_type".
@@ -49,7 +49,7 @@ v2.0.0 (12/03/2021):
 - Added the [API Reference](https://github.com/MorsGames/WalrusTimer/wiki).
 
 v1.3.1 (02/10/2020):
-- Fixed a minor issue that would result with the library not working at all.
+- Fixed a minor issue that would result in the library not working at all.
 - Added "timer_system_get_tickrate".
 - Renamed "timer_get_pause" to "timer_get_paused".
 - Done some minor optimizations.
@@ -82,4 +82,4 @@ v1.1.0 (27/06/2020):
 v1.0.0 (15/06/2020):
 - Initial release.
 
-If you have any questions, you can ask them on this project's [itch.io page](https://mors-games.itch.io/WalrusTimer) or at my [Discord Server](https://discord.gg/4jgSARF).
+If you have any questions, you can ask them on this project's [itch.io page](https://mors-games.itch.io/WalrusTimer) or create an issue in this repository.
