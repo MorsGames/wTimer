@@ -1,8 +1,11 @@
 // WalrusTimer by Mors
 // http://www.mors-games.com/
-// Licensed under MPL 2.0. Please give credit if used, otherwise I will be very sad.
 
-#macro __WALRUSTIMER_VERSION "1.3.1"
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+#macro __WALRUSTIMER_VERSION "2.0.0"
 
 show_debug_message("WalrusTimer v" + __WALRUSTIMER_VERSION + " by Mors");
 
@@ -10,13 +13,26 @@ global.__timer_list = ds_list_create();
 global.__timer_index = 0;
 global.__tick_rate = 1;
 
-/// @func timer_set(callback, value, repeat[OPTIONAL], persistent[OPTIONAL], argument[OPTIONAL])
-/// @argument {function} callback The callback to invoke.
-/// @argument {number} value How long the wait will be for the timer to execute the callback function, either in frames or milliseconds depending on if the system is running at frame rate independent mode or not.
-/// @argument {bool} repeat[OPTIONAL] If the timer will repeat after being completed or will be destroyed. False by default.
-/// @argument {anything} arguments...[OPTIONAL] Arguments that can be used with the function. You can have a maximum of 16. Optional.
-/// @returns {number} The ID corresponding to the timer.
-function timer_set(callback, value) {
+// The enum for timer types.
+enum timer_type {
+	frames,
+	milliseconds,
+	trigger
+}
+
+// A counter used to get the frames that have passed so far during the game. Not affected by the timer tick rate.
+// "globalvar" was only used to make it fit GameMaker's internal variable naming convention.
+globalvar current_frames;
+current_frames = 0;
+
+/// @func timer(callback, duration, repeat[OPTIONAL], arguments...[OPTIONAL])
+/// @desc Executes the callback function in the given amount of frames.
+/// @param {function} callback The callback function to execute.
+/// @param {real} duration Amount of frames it will take for the timer to execute the callback function.
+/// @param {bool} repeat[OPTIONAL] If the timer will repeat after being completed or will be destroyed. Optional, and false by default.
+/// @param {anything} arguments...[OPTIONAL] Arguments that can be used with the callback function. You can have a maximum of 16. Optional.
+/// @returns {real} The ID corresponding to the timer.
+function timer(_callback, duration) {
 	var _repeat = false;
 	var _arguments = noone;
 	if (argument_count > 2)
@@ -28,29 +44,100 @@ function timer_set(callback, value) {
 	}
 		
 	ds_list_add(global.__timer_list, {
-		in: global.__timer_index,
-		ci: id,
-		cb: callback,
-		iv: value,
-		fv: value,
-		rp: _repeat,
-		ar: _arguments,
-		ct: current_time,
-		et: 0,
-		ps: 0
+		index: global.__timer_index,
+		instance: id,
+		callback: _callback,
+		initial_duration: duration,
+		value: duration,
+		rep: _repeat,
+		arguments: _arguments,
+		extra_time: 0,
+		paused: 0,
+		multiplier: 1,
+		type: timer_type.frames
+	});
+	
+	return global.__timer_index++;
+}
+
+/// @func timer_ms(callback, duration, repeat[OPTIONAL], arguments...[OPTIONAL])
+/// @desc Executes the callback function in the given amount of milliseconds.
+/// @param {function} callback The callback function to execute.
+/// @param {real} duration Amount of milliseconds it will take for the timer to execute the callback function.
+/// @param {bool} repeat[OPTIONAL] If the timer will repeat after being completed or will be destroyed. Optional, and false by default.
+/// @param {anything} arguments...[OPTIONAL] Arguments that can be used with the callback function. You can have a maximum of 16. Optional.
+/// @returns {real} The ID corresponding to the timer.
+function timer_ms(_callback, duration) {
+	var _repeat = false;
+	var _arguments = noone;
+	if (argument_count > 2)
+	    _repeat = argument[2];
+	if (argument_count > 3) {
+		for (var i = 3; i < argument_count; i++) {
+			_arguments[i-3] = argument[i]
+		}
+	}
+		
+	ds_list_add(global.__timer_list, {
+		index: global.__timer_index,
+		instance: id,
+		callback: _callback,
+		initial_duration: duration,
+		value: current_time,
+		rep: _repeat,
+		arguments: _arguments,
+		extra_time: 0,
+		paused: 0,
+		multiplier: 1,
+		type: timer_type.milliseconds
+	});
+	
+	return global.__timer_index++;
+}
+
+/// @func timer_trigger(callback, trigger, repeat[OPTIONAL], arguments...[OPTIONAL])
+/// @desc Executes the callback function whenever the trigger function returns true.
+/// @param {function} callback The callback function to execute.
+/// @param {function} trigger The trigger function that will execute the callback function if there's a true return.
+/// @param {bool} repeat[OPTIONAL] If the timer will repeat after being completed or will be destroyed. Optional, and false by default.
+/// @param {anything} arguments...[OPTIONAL] Arguments that can be used with the callback function. You can have a maximum of 16. Optional.
+/// @returns {real} The ID corresponding to the timer.
+function timer_trigger(_callback, trigger) {
+	var _repeat = false;
+	var _arguments = noone;
+	if (argument_count > 2)
+	    _repeat = argument[2];
+	if (argument_count > 3) {
+		for (var i = 3; i < argument_count; i++) {
+			_arguments[i-3] = argument[i]
+		}
+	}
+		
+	ds_list_add(global.__timer_list, {
+		index: global.__timer_index,
+		instance: id,
+		callback: _callback,
+		initial_duration: -1,
+		value: trigger,
+		rep: _repeat,
+		arguments: _arguments,
+		extra_time: 0,
+		paused: 0,
+		multiplier: 1,
+		type: timer_type.trigger
 	});
 	
 	return global.__timer_index++;
 }
 
 /// @func timer_destroy(timer)
-/// @desc Stops and destroys a timer. Does not need to be called manually after a timer's time runs out.
-/// @argument {number} timer The index of the timer to destroy.
-/// @returns {bool} Whether if the timer was successfully removed or not.
+/// @desc Stops and destroys the given timer. Does not need to be called manually after the timer's time runs out.
+/// @param {real} timer The index of the timer to destroy.
+/// @returns {bool} Whether if the given timer was successfully removed or not.
 function timer_destroy(timer) {
 	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
 		var _result = global.__timer_list[| i];
-		if (_result.in == timer) {
+		if (_result.index == timer) {
             delete _result;
 			ds_list_delete(global.__timer_list, i);	
 			return true;
@@ -60,40 +147,72 @@ function timer_destroy(timer) {
 }
 
 /// @func timer_get(timer)
-/// @desc Returns how much time the timer has left, in frames. Returns -1 if the timer doesn't exist.
-/// @argument {number} timer The index of the timer to destroy.
-/// @returns {number} How much time the timer has left, in frames.
+/// @desc Returns either the duration the given timer, or the trigger function if the timer uses that.
+/// @param {real} timer The index of the timer to get the remaining duration of.
+/// @returns {real or function} Either the duration or the trigger function of the given timer. Returns -1 if the timer doesn't exist.
 function timer_get(timer) {
 	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
 		var _result = global.__timer_list[| i];
-		if (_result.in == timer) {
-            return _result.fv;
+		if (_result.index == timer) {
+			if (_result.type == timer_type.milliseconds) {
+				if (_result.paused)
+					return _result.initial_duration + _result.extra_time + _result.value
+				else
+					return _result.initial_duration + _result.extra_time - current_time + _result.value
+			}
+			else {
+				return _result.value;
+			}
 		}
 	}
 	return -1;
 }
 
-/// @func timer_pause(timer, pause[OPTIONAL])
-/// @desc Pauses a timer.
-/// @argument {number} timer The index of the timer to pause.
-/// @argument {bool} pause[OPTIONAL] If the timer should be paused or resumed. When not used, the timer just gets toggled.
-/// @returns {bool} Whether if the timer was successfully paused or not.
-function timer_pause(timer) {
+/// @func timer_get_time(timer)
+/// @desc Returns the initial duration that was set for the given timer in either frames or miliseconds. If you want to get the remaining duration, use timer_get instead. Returns -1 if the timer doesn't exist or if the timer uses triggers.
+/// @param {real} timer The index of the timer to get the initial duration of.
+/// @returns {real} How much time the given timer had initially, in frames or miliseconds.
+function timer_get_time(timer) {
+	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
+		var _result = global.__timer_list[| i];
+		if (_result.index == timer) {
+            return _result.initial_duration;
+		}
+	}
+	return -1;
+}
+
+/// @func timer_get_type(timer)
+/// @desc Returns whether if the given timer uses frames, milliseconds, or triggers, as timer_type enum.
+/// @param {real} timer The index of the timer to get the type of.
+/// @returns {timer_type} Whether if the given timer uses frames, milliseconds, or triggers. Returns -1 if the timer doesn't exist.
+function timer_get_type(timer) {
 	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
 		var _result = global.__timer_list[| i]
-		if (_result.in == timer) {
-			if (argument_count > 1) {
-				_result.ps = argument[1];
-			}
-			else {
-				_result.ps = !_result.ps;
-			}
-			if (_result.ps) {
-				_result.et -= current_time;
-			}
-			else  {
-				_result.et += current_time;
-			}
+		if (_result.index == timer) {
+            return _result.type;
+		}
+	}
+	return -1;
+}
+
+/// @func timer_set_paused(timer, pause[OPTIONAL])
+/// @desc Pauses the given timer, preventing it from progressing.
+/// @param {real} timer The index of the timer to pause.
+/// @param {bool} pause[OPTIONAL] If the timer should be paused or resumed. When not used, the timer just gets toggled. Optional.
+/// @returns {bool} Whether if the given timer was successfully paused or not.
+function timer_set_paused(timer) {
+	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
+		var _result = global.__timer_list[| i]
+		if (_result.index == timer) {
+			if (argument_count > 1)
+				_result.paused = argument[1];
+			else
+				_result.paused = !_result.paused;
+			if (_result.paused)
+				_result.extra_time -= current_time;
+			else
+				_result.extra_time += current_time;
 			return true;
 		}
 	}
@@ -101,38 +220,66 @@ function timer_pause(timer) {
 }
 
 /// @func timer_get_paused(timer)
-/// @desc Gets whether if a timer is paused or not.
-/// @argument {number} timer The index of the timer.
-/// @returns {bool} Whether if the timer is paused or not. Returns -1 if the timer doesn't exist.
+/// @desc Returns whether if the given timer is paused or not.
+/// @param {real} timer The index of the timer.
+/// @returns {bool} Whether if the given timer is paused or not. Returns -1 if the given timer doesn't exist.
 function timer_get_paused(timer) {
 	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
 		var _result = global.__timer_list[| i]
-		if (_result.in == timer) {
-            return _result.ps;
+		if (_result.index == timer) {
+            return _result.paused;
 		}
 	}
 	return -1;
 }
 
-/// @func timer_change(timer, value, change_repeat_time[OPTIONAL])
-/// @desc Changes the current remaining time of the timer, or the milliseconds it takes for timer to complete if the system is running at frame rate independent mode.
-/// @argument {number} timer The index of the timer to pause.
-/// @argument {number} value The new remaining time for the timer, either in frames or milliseconds depending on if the system is running at frame rate independent mode or not.
-/// @argument {number} change_repeat_time[OPTIONAL] When true, only the time used for the future repeats of the timer is changed.
-/// @returns {bool} Whether if the timer's remaining time was successfully changed or not.
-function timer_change(timer, value) {
+/// @func timer_set_multiplier(timer, multiplier)
+/// @desc Changes the speed multiplier of the given timer. If not manually changed, it's 1 by default. Has no effect on timers that use triggers.
+/// @param {real} timer The index of the timer to change the speed multiplier of.
+/// @param {real} multiplier The new speed multiplier for the given timer.
+/// @returns {bool} Whether if the given timer's speed multiplier was successfully changed or not.
+function timer_set_multiplier(timer, multiplier) {
+	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
+		var _result = global.__timer_list[| i]
+		if (_result.index == timer) {
+			_result.multiplier = multiplier;
+			return true;
+		}
+	}
+	return false;
+}
+
+/// @func timer_get_multiplier(timer)
+/// @desc Returns the speed multiplier of the given timer. If not manually changed, it's 1 by default. Returns -1 if the given timer doesn't exist.
+/// @param {real} timer The index of the timer to get the speed multiplier of.
+/// @returns {real} The speed multiplier of the given timer.
+function timer_get_multiplier(timer) {
+	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
+		var _result = global.__timer_list[| i];
+		if (_result.index == timer) {
+            return _result.multiplier;
+		}
+	}
+	return -1;
+}
+
+/// @func timer_change(timer, duration, change_repeat_time[OPTIONAL])
+/// @desc Changes the current remaining duration or the trigger of the given timer.
+/// @param {real} timer The index of the timer to pause.
+/// @param {real or function} duration The new remaining duration or the trigger for the given timer.
+/// @param {real} change_repeat_time[OPTIONAL] When true, only the time used for the future repeats of the given timer is changed. Optional.
+/// @returns {bool} Whether if the given timer's remaining time was successfully changed or not.
+function timer_change(timer, duration) {
 	var _change_repeat_time = false;
 	if (argument_count > 2)
 	    _change_repeat_time = argument[2];
 	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
 		var _result = global.__timer_list[| i]
-		if (_result.in == timer) {
-			if (_change_repeat_time) {
-				_result.iv = value;
-			}
-			else {
-				_result.fv = value;
-			}
+		if (_result.index == timer) {
+			if (_change_repeat_time)
+				_result.initial_duration = duration;
+			else
+				_result.value = duration;
 			return true;
 		}
 	}
@@ -144,13 +291,19 @@ function timer_change(timer, value) {
 function timer_system_update() {
 	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
 		var _result = global.__timer_list[| i];
-		if (_result.fv <= 0 || (global.__tick_rate < 0 && current_time - _result.ct >= _result.fv+_result.et && !_result.ps)) {
-			if (instance_exists(_result.ci)) {
-				var _a = _result.ar;
-				var _c = _result.cb;
+		if (_result.paused)
+			continue;
+		if (_result.type == timer_type.milliseconds && _result.multiplier <> 1) {
+			_result.extra_time += delta_time / 1000 * (1 - _result.multiplier);
+		}
+		if ((_result.type == timer_type.frames && _result.value <= 0)
+		|| (_result.type == timer_type.milliseconds && current_time >= _result.initial_duration + _result.value + _result.extra_time)
+		|| (_result.type == timer_type.trigger && _result.value())) {
+			if (instance_exists(_result.instance)) {
+				var _a = _result.arguments;
+				var _c = _result.callback;
 				var _len = is_array(_a) ? array_length(_a) : -1;
-				with (_result.ci) {
-					// I had no other way of achieving this...
+				with (_result.instance) {
 					switch (_len) {
 					    case 1:  _c(_a[0]); break;
 					    case 2:  _c(_a[0], _a[1]); break;
@@ -172,9 +325,8 @@ function timer_system_update() {
 					}
 				}
 			}
-			if (instance_exists(_result.ci) && _result.rp) {
-				_result.fv = _result.iv;
-				_result.ct = current_time;
+			if (instance_exists(_result.instance) && _result.rep) {
+				_result.value = (_result.type == timer_type.milliseconds) ? current_time : _result.initial_duration;
 			}
 			else {
 				delete _result;
@@ -182,10 +334,11 @@ function timer_system_update() {
 				i--;
 			}
 		}
-		else if (!_result.ps && global.__tick_rate > 0) {
-			_result.fv -= global.__tick_rate;
+		else if (_result.type == timer_type.frames) {
+			_result.value -= global.__tick_rate*_result.multiplier;
 		}
 	}
+	current_frames++;
 }
 
 /// @func timer_system_room_end()
@@ -193,30 +346,36 @@ function timer_system_update() {
 function timer_system_room_end() {
 	for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
 		var _result = global.__timer_list[| i];
-		if (_result.fv <= 0) {
-			if (instance_exists(_result.ci) && !_result.ci.persistent)
-				delete _result;
-				ds_list_delete(global.__timer_list, i);	
-			i--;
+		if (instance_exists(_result.instance) && !_result.instance.persistent) {
+			delete _result;
+			ds_list_delete(global.__timer_list, i);
 		}
-		else {
-			_result.fv--;
-		}
+		i--;
 	}
 }
 
 /// @func timer_system_set_tickrate(tick_rate)
-/// @desc Sets the tick rate of the timer system. If you set it to -1 the timer will run independently from the frame rate, and you will need to use milliseconds instead of frames for the timer durations. 
-/// @argument {number} tick_rate The global tick rate for the timers.
+/// @desc Sets the tick rate of the timer system.
+/// @param {real} tick_rate The global tick rate for the timers.
 function timer_system_set_tickrate(tick_rate) {
 	gml_pragma("forceinline");
 	global.__tick_rate = tick_rate;
 }
 
 /// @func timer_system_get_tickrate()
-/// @desc Gets the tick rate of the timer system.
-/// @returns {number} The global tick rate for the timers.
+/// @desc Returns the tick rate of the timer system.
+/// @returns {real} The global tick rate for the timers.
 function timer_system_get_tickrate() {
 	gml_pragma("forceinline");
 	return global.__tick_rate;
+}
+
+/// @func wait(duration, offset[OPTIONAL])
+/// @desc Always returns false for a specified interval, after which will return true for one frame. Repeats endlessly, and ignores the timer tick rate.
+/// @param {real} duration The interval between true returns in frames.
+/// @param {real} offset[OPTIONAL] Adds an additional offset to the timer in frames. Optional.
+/// @returns {bool} True or false depending on the interval.
+function wait(duration) {
+	gml_pragma("forceinline");
+	return (current_frames + ((argument_count > 1) ? argument[1] : 0) % duration) < 1;
 }
