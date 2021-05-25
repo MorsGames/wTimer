@@ -1,8 +1,8 @@
-# WalrusTimer v2.0.0
+# WalrusTimer v2.1.0
 
 **WalrusTimer** is a replacement library for **GameMaker Studio 2.3**'s built-in alarms.
 
-[API Reference](https://github.com/MorsGames/WalrusTimer/wiki) | [itch.io](https://mors-games.itch.io/WalrusTimer) | [YoYo Marketplace](https://marketplace.yoyogames.com/assets/9388/walrustimer)
+[API Reference](https://github.com/MorsGames/WalrusTimer/wiki) | [itch.io](https://mors-games.itch.io/WalrusTimer)
 
 With this library, you can create timers that run a custom method you give it after a certain number of frames. This is very similar to GameMaker's built-in alarms, but instead of relying on separate actions, with this library, you can just use your own methods, meaning you can declare timers and what they do in a single script, or even a single line if you so choose!
 
@@ -24,14 +24,22 @@ timer(callback, 300);
 timer(function(){show_message("Forever repeating timer.");}, 60, true);
 ```
 
-To learn more about how to use this library, check out the [API Reference](https://github.com/MorsGames/WalrusTimer/wiki).
-
+To learn about how to use the individual functions please give the [API Reference](https://github.com/MorsGames/WalrusTimer/wiki) a look.
 
 ## License
 This library is licensed under **MPL 2.0**. You can learn more about it [here](https://www.mozilla.org/en-US/MPL/2.0/FAQ/).
 
 
 ## Changelog
+v2.1.0 (25/05/2021):
+- Added "timer_destroy_object"
+- Added "timer_set_paused_object".
+- Added "timer_set_multiplier_object".
+- Made it so that the timers now freeze when the instance they are assigned to is deactivated.
+- Updated the example to showcase how the timers now work properly with deactivated instances.
+- Fixed an issue with the "wait" function where it wouldn't work properly.
+- Made changes to the documentation and the comments.
+
 v2.0.0 (12/03/2021):
 - Split "timer_set" into "timer" and "timer_ms", so it's now possible to use both real-time and frame-based timers together.
 - Added "timer_trigger".

@@ -1,5 +1,6 @@
 {
   "resources": [
+    {"id":{"name":"obj_reactivator","path":"objects/obj_reactivator/obj_reactivator.yy",},"order":3,},
     {"id":{"name":"obj_example","path":"objects/obj_example/obj_example.yy",},"order":1,},
     {"id":{"name":"obj_timer_controller","path":"objects/obj_timer_controller/obj_timer_controller.yy",},"order":0,},
     {"id":{"name":"scr_walrustimer","path":"scripts/scr_walrustimer/scr_walrustimer.yy",},"order":1,},
@@ -43,7 +44,7 @@
   ],
   "IncludedFiles": [],
   "MetaData": {
-    "IDEVersion": "2.3.1.542",
+    "IDEVersion": "2.3.2.560",
   },
   "resourceVersion": "1.4",
   "name": "WalrusTimer",

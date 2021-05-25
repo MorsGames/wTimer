@@ -13,6 +13,6 @@ draw_text(x, y, "The timer has " + _remaining_duration_text + " out of " + _tota
 var _pause_text = timer_get_paused(test_timer) ? "Unpause" : "Pause";
 var _slow_down_text = (timer_get_multiplier(test_timer) == 1) ? "Slow down" : "Speed up";
 
-draw_text(x, y + 128, "Space: " + _pause_text + " the timer.\nS: " + _slow_down_text + " the timer.\nD: Destroy the timer.\nC: Change the timer duration to 60.");
+draw_text(x, y + 128, "Space: " + _pause_text + " the timer.\nS: " + _slow_down_text + " the timer.\nD: Destroy the timer.\nF: Deactivate the object for 60 frames.\nC: Change the timer duration to 60.");
 
 draw_set_color(c_white);
