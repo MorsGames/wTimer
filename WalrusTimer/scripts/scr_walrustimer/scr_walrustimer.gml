@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-#macro __WALRUSTIMER_VERSION "2.1.0"
+#macro __WALRUSTIMER_VERSION "2.1.1"
 
 show_debug_message("WalrusTimer v" + __WALRUSTIMER_VERSION + " by Mors");
 
@@ -361,6 +361,7 @@ function timer_system_update() {
         try {
             _not_destroyed = _result.instance.id >= 0;
         }
+        catch(_) {}
         if (_result.deactivated) {
             if (instance_exists(_result.instance)) {
                 _result.deactivated = false;

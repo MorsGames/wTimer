@@ -1,4 +1,4 @@
-# WalrusTimer v2.1.0
+# WalrusTimer v2.1.1
 
 **WalrusTimer** is a replacement library for **GameMaker Studio 2.3**'s built-in alarms.
 
@@ -31,8 +31,11 @@ This library is licensed under **MPL 2.0**. You can learn more about it [here](h
 
 
 ## Changelog
+v2.1.1 (25/05/2021):
+- Added a workaround for an issue that seems like a GameMaker bug.
+
 v2.1.0 (25/05/2021):
-- Added "timer_destroy_object"
+- Added "timer_destroy_object".
 - Added "timer_set_paused_object".
 - Added "timer_set_multiplier_object".
 - Made it so that the timers now freeze when the instance they are assigned to is deactivated.
