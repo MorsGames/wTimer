@@ -36,7 +36,7 @@ If you want to use this library under a different license, get in contact with m
 
 
 ## Changelog
-v2.1.2 (06/11/2021):
+v2.1.2 (09/11/2021):
 - Rebranded the library.
 - Added the example project to the itch.io page as a playable HTML5 build.
 - Made use of GameMaker's optional arguments when applicable.
