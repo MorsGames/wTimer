@@ -1,16 +1,18 @@
-# WalrusTimer v2.1.1
+# wTimer v2.1.2
 
-**WalrusTimer** is a replacement library for **GameMaker Studio 2.3**'s built-in alarms.
+**wTimer** is a library that offers a more robust alternative for **GameMaker Studio 2.3**'s built-in alarms, alongside some extra functions.
 
-[API Reference](https://github.com/MorsGames/WalrusTimer/wiki) | [itch.io](https://mors-games.itch.io/WalrusTimer)
+[API Reference](https://github.com/MorsGames/wTimer/wiki) | [itch.io](https://mors-games.itch.io/wTimer)
 
-With this library, you can create timers that run a custom method you give it after a certain number of frames. This is very similar to GameMaker's built-in alarms, but instead of relying on separate actions, with this library, you can just use your own methods, meaning you can declare timers and what they do in a single script, or even a single line if you so choose!
+With this library, you can create timers that run a specific function after a certain amount of time. This is very similar to GameMaker's built-in alarms, but instead of relying on separate actions, you can just use your own methods, meaning you can declare timers and what they do in a single script, or even a single line if you so choose!
 
-The usage of this library is very similar to Javascript's "setInterval()" and "setTimeout()" methods, so if you're familiar with Javascript this will also feel very familiar.
+The usage of this library is very similar to Javascript's "setInterval()" and "setTimeout()" methods, so if you're familiar with those then you should feel right at home.
 
-This library is only tested on the Windows and HTML5 targets, but it should work on other platforms as well. It also comes with an example project that will teach you the basics.
+This library was only tested on Windows, HTML5, and GXC targets, but it should work on other platforms as well. It also comes with an example project that will show you the basics.
 
 Since I made this library primarily for my own personal projects, I will keep updating it on a regular basis.
+
+This library is made by **Mors** ([Website](http://mors-games.com) | [Patreon](https://www.patreon.com/MorsGames)).
 
 
 ## Basic Usage
@@ -24,13 +26,22 @@ timer(callback, 300);
 timer(function(){show_message("Forever repeating timer.");}, 60, true);
 ```
 
-To learn about how to use the individual functions please give the [API Reference](https://github.com/MorsGames/WalrusTimer/wiki) a look.
+To learn about how to use the individual functions please give the [API Reference](https://github.com/MorsGames/wTimer/wiki) a look.
+
 
 ## License
 This library is licensed under **MPL 2.0**. You can learn more about it [here](https://www.mozilla.org/en-US/MPL/2.0/FAQ/).
 
+If you want to use this library under a different license, get in contact with me.
+
 
 ## Changelog
+v2.1.2 (06/11/2021):
+- Rebranded the library.
+- Added the example project to the itch.io page as a playable HTML5 build.
+- Made use of GameMaker's optional arguments when applicable.
+- Fixed minor errors in the documentation and comments.
+
 v2.1.1 (25/05/2021):
 - Added a workaround for an issue that seems like a GameMaker bug.
 
@@ -57,7 +68,7 @@ v2.0.0 (12/03/2021):
 - Fixed some mistakes with the comments, and tweaked them in general.
 - Adjusted the code a bit.
 - Fixed a few issues with timers not getting destroyed properly when a room ends.
-- Added the [API Reference](https://github.com/MorsGames/WalrusTimer/wiki).
+- Added the [API Reference](https://github.com/MorsGames/wTimer/wiki).
 
 v1.3.1 (02/10/2020):
 - Fixed a minor issue that would result in the library not working at all.

@@ -1,13 +1,13 @@
-// WalrusTimer by Mors
+// wTimer by Mors
 // http://www.mors-games.com/
 
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-#macro __WALRUSTIMER_VERSION "2.1.1"
+#macro __WTIMER_VERSION "2.1.2"
 
-show_debug_message("WalrusTimer v" + __WALRUSTIMER_VERSION + " by Mors");
+show_debug_message("wTimer v" + __WTIMER_VERSION + " by Mors");
 
 global.__timer_list = ds_list_create();
 global.__timer_index = 0;
@@ -32,11 +32,8 @@ current_frames = 0;
 /// @param {bool} repeat[OPTIONAL] If the timer will repeat after being completed or will be destroyed. Optional, and false by default.
 /// @param {anything} arguments...[OPTIONAL] Arguments that can be used with the callback function. You can have a maximum of 16. Optional.
 /// @returns {real} The ID corresponding to the timer.
-function timer(_callback, duration) {
-    var _repeat = false;
-    var _arguments = noone;
-    if (argument_count > 2)
-        _repeat = argument[2];
+function timer(_callback, duration, _repeat = false) {
+    var _arguments = undefined;
     if (argument_count > 3) {
         for (var i = 3; i < argument_count; i++) {
             _arguments[i-3] = argument[i]
@@ -68,11 +65,8 @@ function timer(_callback, duration) {
 /// @param {bool} repeat[OPTIONAL] If the timer will repeat after being completed or will be destroyed. Optional, and false by default.
 /// @param {anything} arguments...[OPTIONAL] Arguments that can be used with the callback function. You can have a maximum of 16. Optional.
 /// @returns {real} The ID corresponding to the timer.
-function timer_ms(_callback, duration) {
-    var _repeat = false;
-    var _arguments = noone;
-    if (argument_count > 2)
-        _repeat = argument[2];
+function timer_ms(_callback, duration, _repeat = false) {
+    var _arguments = undefined;
     if (argument_count > 3) {
         for (var i = 3; i < argument_count; i++) {
             _arguments[i-3] = argument[i]
@@ -104,11 +98,8 @@ function timer_ms(_callback, duration) {
 /// @param {bool} repeat[OPTIONAL] If the timer will repeat after being completed or will be destroyed. Optional, and false by default.
 /// @param {anything} arguments...[OPTIONAL] Arguments that can be used with the callback function. You can have a maximum of 16. Optional.
 /// @returns {real} The ID corresponding to the timer.
-function timer_trigger(_callback, trigger) {
-    var _repeat = false;
-    var _arguments = noone;
-    if (argument_count > 2)
-        _repeat = argument[2];
+function timer_trigger(_callback, trigger, _repeat = false) {
+    var _arguments = undefined;
     if (argument_count > 3) {
         for (var i = 3; i < argument_count; i++) {
             _arguments[i-3] = argument[i]
@@ -151,7 +142,7 @@ function timer_destroy(timer) {
 
 /// @func timer_destroy_object(id)
 /// @desc Stops and destroys all timers that either belong to the given instance or all instances of the given object type.
-/// @param {instance_id or object_index} id The instance ID or the object index that the timers are assigned to. You can also use the "all" keyword.
+/// @param {instance_id/object_index} id The instance ID or the object index that the timers are assigned to. You can also use the "all" keyword.
 /// @returns {real} Number of timers that have been successfully destroyed.
 function timer_destroy_object(_id) {
     var _return = 0;
@@ -242,7 +233,7 @@ function timer_set_paused(timer) {
 
 /// @func timer_set_paused_object(id, pause[OPTIONAL])
 /// @desc Pauses all timers that either belong to the given instance or all instances of the given object type.
-/// @param {instance_id or object_index} id The instance ID or the object index that the timers are assigned to. You can also use the "all" keyword.
+/// @param {instance_id/object_index} id The instance ID or the object index that the timers are assigned to. You can also use the "all" keyword.
 /// @param {bool} pause[OPTIONAL] If the timers should be paused or resumed. When not used, the timers just get toggled. Optional.
 /// @returns {real} Number of timers that have been successfully paused.
 function timer_set_paused_object(_id) {
@@ -297,7 +288,7 @@ function timer_set_multiplier(timer, multiplier) {
 
 /// @func timer_set_multiplier_object(id, multiplier)
 /// @desc Changes the speed multipliers of all timers that either belong to the given instance or all instances of the given object type. If not manually changed, it's 1 by default. Has no effect on timers that use triggers.
-/// @param {instance_id or object_index} id The instance ID or the object index that the timers are assigned to. You can also use the "all" keyword.
+/// @param {instance_id/object_index} id The instance ID or the object index that the timers are assigned to. You can also use the "all" keyword.
 /// @param {real} multiplier The new speed multiplier for the timers.
 /// @returns {real} Number of timers that have their multiplier changed successfully.
 function timer_set_multiplier_object(_id, multiplier) {
@@ -330,17 +321,14 @@ function timer_get_multiplier(timer) {
 /// @func timer_change(timer, duration, change_repeat_time[OPTIONAL])
 /// @desc Changes the current remaining duration or the trigger of the given timer.
 /// @param {real} timer The index of the timer to pause.
-/// @param {real or function} duration The new remaining duration or the trigger function for the given timer.
+/// @param {real/function} duration The new remaining duration or the trigger function for the given timer.
 /// @param {real} change_repeat_time[OPTIONAL] When true, only the time used for the future repeats of the given timer is changed. Optional.
 /// @returns {bool} Whether if the given timer's remaining time was successfully changed or not.
-function timer_change(timer, duration) {
-    var _change_repeat_time = false;
-    if (argument_count > 2)
-        _change_repeat_time = argument[2];
+function timer_change(timer, duration, change_repeat_time = false) {
     for (var i = 0; i < ds_list_size(global.__timer_list); i++) {
         var _result = global.__timer_list[| i];
         if (_result.index == timer) {
-            if (_change_repeat_time)
+            if (change_repeat_time)
                 _result.initial_duration = duration;
             else
                 _result.value = duration;

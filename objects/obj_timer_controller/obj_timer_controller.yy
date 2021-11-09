@@ -24,8 +24,8 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "WalrusTimer",
-    "path": "folders/WalrusTimer.yy",
+    "name": "wTimer",
+    "path": "folders/wTimer.yy",
   },
   "resourceVersion": "1.0",
   "name": "obj_timer_controller",
