@@ -1,6 +1,6 @@
-# wTimer v2.1.2
+# wTimer v2.1.3
 
-**wTimer** is a library that offers a more robust alternative for **GameMaker Studio 2.3**'s built-in alarms, alongside some extra functions.
+**wTimer** is a library that offers a more robust alternative for **GameMaker**'s built-in alarms, alongside some extra functions.
 
 [API Reference](https://github.com/MorsGames/wTimer/wiki) | [itch.io](https://mors-games.itch.io/wTimer)
 
@@ -36,6 +36,10 @@ If you want to use this library under a different license, get in contact with m
 
 
 ## Changelog
+v2.1.3 (31/03/2022):
+- Fixed a bug with persistent timers getting caught in a loop at room end ([#2](/../../issues/2))
+- Touched up the internal documentation to work better with the upcoming smart autocompletion feature of GameMaker.
+
 v2.1.2 (09/11/2021):
 - Rebranded the library.
 - Added the example project to the itch.io page as a playable HTML5 build.
