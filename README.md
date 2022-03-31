@@ -30,15 +30,16 @@ To learn about how to use the individual functions please give the [API Referenc
 
 
 ## License
-This library is licensed under **MPL 2.0**. You can learn more about it [here](https://www.mozilla.org/en-US/MPL/2.0/FAQ/).
+The main script for the library (the "scr_wtimer.gml" file) is licensed under **MPL 2.0**. You can learn more about it [here](https://www.mozilla.org/en-US/MPL/2.0/FAQ/), with Q8 being the most relevant part for most game developers. The rest of the repository is licensed under public domain.
 
-If you want to use this library under a different license, get in contact with me.
+If you want to use this library under a different license, please get in contact with me.
 
 
 ## Changelog
 v2.1.3 (31/03/2022):
 - Fixed a bug with persistent timers getting caught in a loop at room end ([#2](/../../issues/2))
 - Touched up the internal documentation to work better with the upcoming smart autocompletion feature of GameMaker.
+- Moved around the "timer_system_update" call in the controller object.
 
 v2.1.2 (09/11/2021):
 - Rebranded the library.
